@@ -1,0 +1,3 @@
+
+GET https://{{url}}/get_projects
+Authorization: Basic {{user}} {{password}}
