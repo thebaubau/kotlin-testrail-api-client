@@ -1,4 +1,4 @@
-//package api
+package io.github.thebaubau.api//package api
 //
 //import java.io.*
 //import java.net.HttpURLConnection

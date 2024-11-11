@@ -1,4 +1,4 @@
-package api
+package io.github.thebaubau.api
 
 import com.google.gson.Gson
 import com.google.gson.JsonElement
@@ -12,7 +12,7 @@ import java.util.*
 
 class ApiClient(val baseURL: URL, val token: String) {
     private val client = HttpClient.newHttpClient()
-    private val gson = Gson()
+    internal val gson = Gson()
 
     constructor(baseURL: String, user: String, password: String) : this(
         URL(baseURL), Base64.getEncoder().encodeToString("$user:$password".toByteArray())
@@ -53,6 +53,15 @@ class ApiClient(val baseURL: URL, val token: String) {
 
         val response = client.send(req, HttpResponse.BodyHandlers.ofString())
         return gson.fromJson(response.body(), JsonElement::class.java).asJsonObject
+    }
+
+    fun getPlans(projectId: Int): HttpResponse<String> {
+        val req = testRailRequest()
+            .GET()
+            .uri(URI("$baseURL/get_plans/$projectId"))
+            .build()
+
+        return client.send(req, HttpResponse.BodyHandlers.ofString())
     }
 
     private fun testRailRequest(): HttpRequest.Builder = HttpRequest.newBuilder()
