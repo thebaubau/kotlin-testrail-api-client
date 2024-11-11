@@ -3,11 +3,10 @@ package io.github.thebaubau
 import api.ApiClient
 
 fun main() {
-    val url = "https://betvictor.testrail.net/index.php?/api/v2"
+    val url = "https://[YOUR_URL]/index.php?/api/v2"
 
-
-    val user = "daniel.fintinariu@betvictor.com"
-    val password = "1faktEiPlSLpr0gXhGJ/-tIzB8gm6G7UZFeJ1V1G5"
+    val user = "[YOUR_USER]"
+    val password = "[YOUR_PASSWORD]"
 
     val projectId = 147
     val client = ApiClient(url, user, password)
