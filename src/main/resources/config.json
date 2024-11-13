@@ -1,0 +1,24 @@
+{
+  "projectId": 147,
+  "suites": [
+    {
+      "name": "Regression",
+      "id": 4607
+    },
+    {
+      "name": "Smoke",
+      "id": 4575
+    }
+  ],
+  "buildVersion": "6.45.0",
+  "brands": [
+    "BV-UK",
+    "BV AS",
+    "BV CA",
+    "BV TH",
+    "HB",
+    "PM UK",
+    "PM AS"
+  ],
+  "buildNo": "17331234"
+}

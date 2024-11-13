@@ -1,33 +1,44 @@
 package io.github.thebaubau
 
+import com.google.gson.Gson
 import io.github.thebaubau.api.ApiClient
+import io.github.thebaubau.api.id
+import java.nio.file.Files
+import java.nio.file.Path
+import java.nio.file.Paths
+
 
 fun main() {
     val bvUrl = System.getenv("testrail_url")
     val user = System.getenv("testrail_user")
     val password = System.getenv("testrail_pass")
 
-    val projectId = 147
+    val configJson = Files.readString(Paths.get("src/main/resources/config.json"))
+    val config = Gson().fromJson(configJson, ConfigProperties::class.java)
+
     val url = "https://$bvUrl/index.php?/api/v2"
-    val client = ApiClient(url, user, password, projectId)
+    val client = ApiClient(url, user, password, config.projectId)
 
-    val buildNo = "17313308"
+    client.createMilestone(config.buildVersion).also { parent ->
 
-    client.createMilestone("6.44.0").also { parent ->
-        val parentId = parent["id"].asInt
-
-        client.createMilestone( "BV-UK", parentId).also { milestone ->
-            val milestoneId = milestone["id"].asString
-
-            val suiteId = 4607
-            client.getSuite(4607)
-
-            client.createPlan(buildNo, milestoneId, suiteId).also { plan ->
-                val planId = milestone["id"].asString
-
+        config.brands.forEach { brand ->
+            client.createMilestone(brand, parent.id()).also { milestone ->
+                client.createPlan(config.buildNo, milestone.id(), config.suites)
             }
         }
     }
 }
+
+data class NativeSuite(val name: String, val id: Long)
+
+data class ConfigProperties(
+    val projectId: Long,
+    val suites: List<NativeSuite>,
+    val buildVersion: String,
+    val brands: List<String>,
+    val buildNo: String
+)
+
+
 
 
