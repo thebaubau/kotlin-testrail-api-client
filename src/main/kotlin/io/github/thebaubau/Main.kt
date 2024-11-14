@@ -4,8 +4,10 @@ import com.google.gson.Gson
 import io.github.thebaubau.api.ApiClient
 import io.github.thebaubau.api.id
 import java.nio.file.Files
-import java.nio.file.Path
 import java.nio.file.Paths
+import java.time.LocalDate
+import java.time.ZoneId
+import java.time.format.DateTimeFormatter
 
 
 fun main() {
@@ -19,14 +21,18 @@ fun main() {
     val url = "https://$bvUrl/index.php?/api/v2"
     val client = ApiClient(url, user, password, config.projectId)
 
-    client.createMilestone(config.buildVersion).also { parent ->
-
-        config.brands.forEach { brand ->
-            client.createMilestone(brand, parent.id()).also { milestone ->
-                client.createPlan(config.buildNo, milestone.id(), config.suites)
+    client.createMilestone(
+        name = config.buildVersion,
+        startDate = timestamp(config.startDate),
+        dueDate = timestamp(config.dueDate)
+    )
+        .also { parent ->
+            config.brands.forEach { brand ->
+                client.createMilestone(brand, parent.id()).also { milestone ->
+                    client.createPlan(config.buildNo, milestone.id(), config.suites)
+                }
             }
         }
-    }
 }
 
 data class NativeSuite(val name: String, val id: Long)
@@ -36,8 +42,17 @@ data class ConfigProperties(
     val suites: List<NativeSuite>,
     val buildVersion: String,
     val brands: List<String>,
-    val buildNo: String
+    val buildNo: String,
+    val startDate: String,
+    val dueDate: String
 )
+
+fun timestamp(date: String?): Long {
+    val formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy")
+    val localDate = LocalDate.parse(date, formatter)
+
+    return localDate.atStartOfDay(ZoneId.systemDefault()).toEpochSecond()
+}
 
 
 

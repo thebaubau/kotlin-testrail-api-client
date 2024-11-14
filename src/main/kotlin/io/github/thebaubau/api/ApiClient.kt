@@ -9,6 +9,9 @@ import java.net.URI
 import java.net.http.HttpClient
 import java.net.http.HttpRequest
 import java.net.http.HttpResponse
+import java.time.LocalDate
+import java.time.ZoneId
+import java.time.format.DateTimeFormatter
 import java.util.*
 
 class ApiClient(private val baseURL: String, private val token: String, private val projectId: Long) {
@@ -50,14 +53,16 @@ class ApiClient(private val baseURL: String, private val token: String, private 
             client.send(req, HttpResponse.BodyHandlers.ofString()))
     }
 
-    fun createMilestone(name: String, parentId: Long? = null): JsonObject {
+    fun createMilestone(name: String, parentId: Long? = null, startDate: Long? = null, dueDate: Long? = null): JsonObject {
         val req = testRailRequest()
             .POST(
                 HttpRequest.BodyPublishers.ofString(
                     """
                 {
                     "name": "$name", 
-                    "parent_id": $parentId
+                    "parent_id": $parentId,
+                    "start_on": $startDate,
+                    "due_on":  $dueDate
                 }
                 """.trimIndent()
                 )
@@ -123,8 +128,6 @@ class ApiClient(private val baseURL: String, private val token: String, private 
     private fun testRailRequest(): HttpRequest.Builder = HttpRequest.newBuilder()
         .header("Content-Type", "application/json")
         .header("Authorization", "Basic $token")
-
-
 }
 
 fun JsonObject.id(): Long {
@@ -134,3 +137,4 @@ fun JsonObject.id(): Long {
 fun JsonObject.name(): String {
     return this["name"].asString
 }
+

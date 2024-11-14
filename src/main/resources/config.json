@@ -10,15 +10,11 @@
       "id": 4575
     }
   ],
-  "buildVersion": "6.45.0",
+  "buildVersion": "6.46.0",
   "brands": [
-    "BV-UK",
-    "BV AS",
-    "BV CA",
-    "BV TH",
-    "HB",
-    "PM UK",
-    "PM AS"
+    "BV UK"
   ],
-  "buildNo": "17331234"
+  "buildNo": "17331234",
+  "startDate": "22/11/2024",
+  "dueDate": "22/12/2024"
 }
